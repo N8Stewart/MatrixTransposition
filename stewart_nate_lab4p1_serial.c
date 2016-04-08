@@ -67,7 +67,6 @@ int main(void) {
 	time(&startTime);
 	clockTime = clock();
 	for (k = 0; k < 100; k++) {
-		f_ptr = matrix; // reset the pointer to the head
 		for (i = 1; i < NUM_ROWS; i++) {
 			f_ptr = matrix + i * NUM_COLS;
 			first_ptr = matrix + (i - 1) * NUM_COLS + 1;

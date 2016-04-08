@@ -85,9 +85,6 @@ int main(void) {
 	time(&endTime);
 	clockTime = clock() - clockTime;
 
-	//outputMatrix(stdout, matrix, MATRIX_DIM, MATRIX_DIM);
-	//outputMatrix(stdout, result, MATRIX_DIM, MATRIX_DIM);
-
 	unsigned long long numFloatingPointOperations = (MATRIX_DIM - 1);
 	numFloatingPointOperations *= (MATRIX_DIM-1);
 	numFloatingPointOperations *= (MATRIX_DIM-1);
