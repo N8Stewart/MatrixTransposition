@@ -31,7 +31,7 @@ void outputMatrix(FILE *fout, double *matrix, int rows, int cols) {
 
 	for (i = 0; i < rows; i++) {
 		for (j = 0; j < cols; j++) {
-			fprintf(fout,  "%lf ", *(matrix + i * cols + j));
+			fprintf(fout,  "%8.1lf ", *(matrix + i * cols + j));
 		}
 		fprintf(fout, "\n");
 	}
@@ -66,7 +66,7 @@ int main(void) {
 	// Do math
 	time(&startTime);
 	clockTime = clock();
-	for (k = 0; k < 1; k++) {
+	for (k = 0; k < 100; k++) {
 		for (i = 1; i < NUM_ROWS; i++) {
 			f_ptr = matrix + i * NUM_COLS;
 			first_ptr = matrix + (i - 1) * NUM_COLS + 1;
