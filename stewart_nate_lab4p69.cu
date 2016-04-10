@@ -31,7 +31,7 @@ void outputMatrix(FILE *fout, double *matrix, int rows, int cols) {
 
 	for (i = 0; i < rows; i++) {
 		for (j = 0; j < cols; j++) {
-			fprintf(fout,  "%lf ", *(matrix + i * cols + j));
+			fprintf(fout,  "%4.1lf ", *(matrix + i * cols + j));
 		}
 		fprintf(fout, "\n");
 	}
@@ -104,7 +104,7 @@ int main(void) {
     time(&endTime);
 	clockTime = clock() - clockTime;
     cudaMemcpy(h_matrix, d_matrix, memSize, cudaMemcpyDeviceToHost);
-
+	printf("Error: %d\n", cudaGetLastError());
 	outputMatrix(stdout, h_matrix, NUM_ROWS, NUM_COLS);
     
 	// Compute estimated GFlops
