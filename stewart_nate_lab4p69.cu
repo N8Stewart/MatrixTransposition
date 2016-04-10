@@ -44,11 +44,6 @@ __global__ void computeMath(double *matrix) {
     // Declare pointers to the two arguments of the addition
 	double *f_ptr, *first_ptr, *second_ptr;
 
-	for (i = 0; i < NUM_ROWS * NUM_COLS; i++) {
-		matrix[i] = 0;
-	}
-
-	/*
 	for (k = 0; k < 100; k++) {
 		for (i = 1; i < NUM_ROWS; i++) {
 			f_ptr = matrix + i * NUM_COLS;
@@ -58,7 +53,7 @@ __global__ void computeMath(double *matrix) {
 				*f_ptr = *first_ptr + *second_ptr;
 			}
 		}
-	}*/
+	}
 }
 
 int main(void) {
