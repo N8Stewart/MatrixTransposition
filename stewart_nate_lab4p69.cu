@@ -11,8 +11,8 @@
 #define RANDOM_VALUE_MIN 1.0
 #define RANDOM_VALUE_MAX 2.0
 
-#define NUM_ROWS 25 
-#define NUM_COLS 25 
+#define NUM_ROWS 10 
+#define NUM_COLS 10 
 
 /*
  * Calculate and return a random value between min and max.
@@ -44,7 +44,7 @@ __global__ void computeMath(double *matrix) {
     // Declare pointers to the two arguments of the addition
 	double *f_ptr, *first_ptr, *second_ptr;
 
-	for (k = 0; k < 100; k++) {
+	for (k = 0; k < 1; k++) {
 		for (i = 1; i < NUM_ROWS; i++) {
 			f_ptr = matrix + i * NUM_COLS;
 			first_ptr = matrix + (i - 1) * NUM_COLS + 1;
