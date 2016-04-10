@@ -109,7 +109,7 @@ int main(void) {
     time(&endTime);
 	clockTime = clock() - clockTime;
     cudaMemcpy(h_matrix, d_matrix, memSize, cudaMemcpyDeviceToHost);
-    
+
     // Compute estimated GFlops
 	unsigned long long numFloatingPointOperations = 100 * (NUM_ROWS-1) * (NUM_COLS-1);
 	double gflops = numFloatingPointOperations / ((double)clockTime/1000000) / 1000000000;
