@@ -31,7 +31,7 @@ void outputMatrix(FILE *fout, double *matrix, int rows, int cols) {
 
 	for (i = 0; i < rows; i++) {
 		for (j = 0; j < cols; j++) {
-			fprintf(fout,  "%4.1lf ", *(matrix + i * cols + j));
+			fprintf(fout,  "%8.1lf ", *(matrix + i * cols + j));
 		}
 		fprintf(fout, "\n");
 	}
@@ -44,7 +44,7 @@ __global__ void computeMath(double *matrix) {
     // Declare pointers to the two arguments of the addition
 	double *f_ptr, *first_ptr, *second_ptr;
 
-	for (k = 0; k < 1; k++) {
+	for (k = 0; k < 100; k++) {
 		for (i = 1; i < NUM_ROWS; i++) {
 			f_ptr = matrix + i * NUM_COLS;
 			first_ptr = matrix + (i - 1) * NUM_COLS + 1;
