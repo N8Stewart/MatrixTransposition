@@ -11,7 +11,7 @@
 #define RANDOM_VALUE_MIN 1.0
 #define RANDOM_VALUE_MAX 2.0
 
-#define MATRIX_DIM 4096
+#define MATRIX_DIM 4096 
 
 /*
  * Calculate and return a random value between min and max.
@@ -102,9 +102,9 @@ int main(void) {
 			*m_ptr = randDouble(RANDOM_VALUE_MIN, RANDOM_VALUE_MAX);
 		}
 	}
-	cudaMemcpy(d_matrix, h_matrix, memSize, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_matrix, h_matrix, memSize * sizeof(*h_matrix), cudaMemcpyHostToDevice);
 	checkError();
-	cudaMemcpy(d_result, h_result, memSize, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_result, h_result, memSize * sizeof(*h_matrix), cudaMemcpyHostToDevice);
 	checkError();
 
 	// Set up grid and block structure
@@ -116,7 +116,7 @@ int main(void) {
 	checkError();
 	
 	// Retrieve results
-	cudaMemcpy(h_result, d_result, memSize, cudaMemcpyDeviceToHost);
+	cudaMemcpy(h_result, d_result, memSize * sizeof(*h_matrix), cudaMemcpyDeviceToHost);
 	checkError();
 
 	// Free memory and make sure it completes without error
