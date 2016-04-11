@@ -85,15 +85,14 @@ int main(void) {
 	time(&endTime);
 	clockTime = clock() - clockTime;
 
+	// Value is too big to be calculated in a single operation
 	unsigned long long numFloatingPointOperations = (MATRIX_DIM - 1);
 	numFloatingPointOperations *= (MATRIX_DIM-1);
 	numFloatingPointOperations *= (MATRIX_DIM-1);
 	numFloatingPointOperations *= 2;
-	double gflops = numFloatingPointOperations / ((double)clockTime/1000000) / 1000000000;
 
 	printf("*********************************************************************\n");
-	printf("Number of floating point operations:%ld\n", numFloatingPointOperations);
-	printf("Estimated GFlops:%lf GFlops\n\n", gflops);
+	printf("Number of floating point operations:%ld\n\n", numFloatingPointOperations);
 	printf("elapsed convergence loop time\t(clock): %lu\n", clockTime);
 	printf("elapsed convergence loop time\t (time): %.f\n", difftime(endTime, startTime));
 	printf("*********************************************************************\n");

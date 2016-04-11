@@ -44,18 +44,29 @@ __global__ void computeMath(double *matrix) {
     // Grab id of thread
     int threadId = blockDim.x * threadIdx.y + threadIdx.x + 1;
     
-    // Declare pointers to the two arguments of the addition
+    // Declare pointers to the two arguments of the addition and the result pointer
 	double *f_ptr, *first_ptr, *second_ptr;
 	
 	// Grab starting points for pointers
-    f_ptr = matrix + threadId * 4097;
-    first_ptr = matrix + (threadId - 1) * 4097 + 1;
+    f_ptr = matrix + threadId * NUM_COLS;
+    first_ptr = matrix + (threadId - 1) * NUM_COLS + 1;
     second_ptr = f_ptr + 1;
     
     // Compute a single row
-    for (i = 0; i < 4096; i++, f_ptr++, first_ptr++, second_ptr++) {
+    for (i = 0; i < NUM_COLS - 1; i++, f_ptr++, first_ptr++, second_ptr++) {
         *f_ptr = *first_ptr + *second_ptr;
     }
+}
+
+/*
+ * Check if an error occurred during the last CUDA command
+ */
+void checkError() {
+	int errorCode = cudaGetLastError();
+
+	if (errorCode != 0) {
+		printf("Error %d occurred during last operation.\n", errorCode);
+	}
 }
 
 int main(void) {
@@ -71,9 +82,9 @@ int main(void) {
 	srand(time(NULL));
     
     // Define thread hierarchy
-    int nblocks = 1;
-    int dimX = 512;
-    int dimY = 8;
+    int nblocks = 16;
+    int dimX = 128;
+    int dimY = 2;
 
     // Declare the memory pointers
     double *h_matrix, *d_matrix;
@@ -84,6 +95,7 @@ int main(void) {
 	// Create space on the host and device for matrix
     h_matrix = (double *)malloc(memSize);
     cudaMalloc( (void**) &d_matrix, memSize);
+	checkError();
 
 	// Initialize the matrix and copy values into device
 	double *f_ptr = h_matrix; // Setup a traversal pointer
@@ -93,6 +105,7 @@ int main(void) {
 		}
 	}
     cudaMemcpy(d_matrix, h_matrix, memSize, cudaMemcpyHostToDevice);
+	checkError();
     
     // Set up grid and block structure
     dim3 dimGrid(nblocks);
@@ -103,24 +116,24 @@ int main(void) {
 	clockTime = clock();
     for (i = 0; i < 100; i++) {
 		computeMath<<< dimGrid, dimBlock >>>(d_matrix);
-    }
+		checkError();
+	}
     
     // stop timer and retrieve results
     time(&endTime);
 	clockTime = clock() - clockTime;
     cudaMemcpy(h_matrix, d_matrix, memSize, cudaMemcpyDeviceToHost);
+	checkError();
     
-    // Compute estimated GFlops
 	unsigned long long numFloatingPointOperations = 100 * (NUM_ROWS-1) * (NUM_COLS-1);
-	double gflops = numFloatingPointOperations / ((double)clockTime/1000000) / 1000000000;
 	printf("*********************************************************************\n");
-	printf("Number of floating point operations:%ld\n", numFloatingPointOperations);
-	printf("Estimated GFlops:%lf GFlops\n\n", gflops);
+	printf("Number of floating point operations:%ld\n\n", numFloatingPointOperations);
 	printf("elapsed convergence loop time\t(clock): %lu\n", clockTime);
 	printf("elapsed convergence loop time\t (time): %.f\n", difftime(endTime, startTime));
 	printf("*********************************************************************\n");
 
 	free(h_matrix);
     cudaFree(d_matrix);
+	checkError();
 }
 
