@@ -41,13 +41,6 @@ int main(void) {
 	// Declare the needed variables
 	int i, j, k;
 	
-	// Variables for timing
-	time_t startTime, endTime;
-	clock_t clockTime;
-
-	// Seed the random number generator
-	srand(time(NULL));
-	
 	// Create space on the heap for matrix and transpose
 	double *matrix = malloc(sizeof(*matrix) * MATRIX_DIM * MATRIX_DIM); 
 	double *result = malloc(sizeof(*result) * MATRIX_DIM * MATRIX_DIM); 
@@ -67,11 +60,10 @@ int main(void) {
 	first_ptr = second_ptr = matrix;
 	m_ptr = result;
 
-	// Do math
-	time(&startTime);
-	clockTime = clock();
+	// Compute the matrix multiplication
 	for (i = 0; i < MATRIX_DIM; i++) {
 		for (j = 0; j < MATRIX_DIM; j++, m_ptr++) {
+			// Store pointers to the important parts to cut down on flop
 			first_ptr = matrix + i;
 			second_ptr = matrix + j;
 			for (k = 0; k < MATRIX_DIM; k++, (first_ptr += MATRIX_DIM), (second_ptr += MATRIX_DIM)) {
@@ -79,24 +71,6 @@ int main(void) {
 			}
 		}
 	}
-
-	// Get end times and output results
-	time(&endTime);
-	clockTime = clock() - clockTime;
-
-	// Value is too big to be calculated in a single operation
-	unsigned long long numFloatingPointOperations = (MATRIX_DIM - 1);
-	numFloatingPointOperations *= (MATRIX_DIM-1);
-	numFloatingPointOperations *= (MATRIX_DIM-1);
-	numFloatingPointOperations *= 2;
-
-	double gflops = numFloatingPointOperations / ((double)clockTime/1000000) / 1000000000;
-	printf("*********************************************************************\n");
-	printf("Number of floating point operations:%ld\n", numFloatingPointOperations);
-	printf("Estimated GFlops:%lf GFlops\n\n", gflops);
-	printf("elapsed convergence loop time\t(clock): %lu\n", clockTime);
-	printf("elapsed convergence loop time\t (time): %.f\n", difftime(endTime, startTime));
-	printf("*********************************************************************\n");
 
 	free(matrix);
 	free(result);

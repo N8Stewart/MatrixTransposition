@@ -76,17 +76,10 @@ int main(void) {
 	// Declare the needed variables
 	int i, j;
 	
-	// Variables for timing
-	time_t startTime, endTime;
-	clock_t clockTime;
-
-	// Seed the random number generator
-	srand(time(NULL));
-
 	// Define thread hierarchy
 	int nblocksX = 4096;
-	int nblocksY = 16;
-	int dimX = 256;
+	int nblocksY = 128;
+	int dimX = 32;
 
 	// Declare the memory pointers
 	double *h_matrix, *d_matrix, *h_result, *d_result;
@@ -118,32 +111,15 @@ int main(void) {
 	dim3 dimGrid(nblocksX, nblocksY);
 	dim3 dimBlock(dimX);
 
-	// Launch the kernel and begin timer	
-	time(&startTime);
-	clockTime = clock();
+	// Launch the kernel
 	computeMath<<< dimGrid, dimBlock >>>(d_matrix, d_result);
 	checkError();
 	
-	// Stop timer and retrieve results
+	// Retrieve results
 	cudaMemcpy(h_result, d_result, memSize, cudaMemcpyDeviceToHost);
 	checkError();
-	time(&endTime);
-	clockTime = clock() - clockTime;
-	
-	// Value is too big to be calculated in a single operation
-	unsigned long long numFloatingPointOperations = (MATRIX_DIM - 1);
-	numFloatingPointOperations *= (MATRIX_DIM-1);
-	numFloatingPointOperations *= (MATRIX_DIM-1);
-	numFloatingPointOperations *= 2;
 
-	double gflops = numFloatingPointOperations / ((double)clockTime/1000000) / 1000000000;
-	printf("*********************************************************************\n");
-	printf("Number of floating point operations:%ld\n", numFloatingPointOperations);
-	printf("Estimated GFlops:%lf GFlops\n\n", gflops);
-	printf("elapsed convergence loop time\t(clock): %lu\n", clockTime);
-	printf("elapsed convergence loop time\t (time): %.f\n", difftime(endTime, startTime));
-	printf("*********************************************************************\n");
-
+	// Free memory and make sure it completes without error
 	free(h_matrix);
 	free(h_result);
 	cudaFree(d_matrix);
