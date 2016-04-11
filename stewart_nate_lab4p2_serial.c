@@ -71,7 +71,6 @@ int main(void) {
 	time(&startTime);
 	clockTime = clock();
 	for (i = 0; i < MATRIX_DIM; i++) {
-		printf("Iteration %5d%5d%5d | result = %p\n", i, j, k, m_ptr);
 		for (j = 0; j < MATRIX_DIM; j++, m_ptr++) {
 			first_ptr = matrix + i;
 			second_ptr = matrix + j;
@@ -91,8 +90,10 @@ int main(void) {
 	numFloatingPointOperations *= (MATRIX_DIM-1);
 	numFloatingPointOperations *= 2;
 
+	double gflops = numFloatingPointOperations / ((double)clockTime/1000000) / 1000000000;
 	printf("*********************************************************************\n");
-	printf("Number of floating point operations:%ld\n\n", numFloatingPointOperations);
+	printf("Number of floating point operations:%ld\n", numFloatingPointOperations);
+	printf("Estimated GFlops:%lf GFlops\n\n", gflops);
 	printf("elapsed convergence loop time\t(clock): %lu\n", clockTime);
 	printf("elapsed convergence loop time\t (time): %.f\n", difftime(endTime, startTime));
 	printf("*********************************************************************\n");

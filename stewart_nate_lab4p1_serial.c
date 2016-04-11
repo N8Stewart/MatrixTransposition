@@ -82,8 +82,10 @@ int main(void) {
 	clockTime = clock() - clockTime;
 
 	unsigned long long numFloatingPointOperations = 100 * (NUM_ROWS-1) * (NUM_COLS-1);
+	double gflops = numFloatingPointOperations / ((double)clockTime/1000000) / 1000000000;
 	printf("*********************************************************************\n");
-	printf("Number of floating point operations:%ld\n\n", numFloatingPointOperations);
+	printf("Number of floating point operations:%ld\n", numFloatingPointOperations);
+	printf("Estimated GFlops:%lf GFlops\n\n", gflops);
 	printf("elapsed convergence loop time\t(clock): %lu\n", clockTime);
 	printf("elapsed convergence loop time\t (time): %.f\n", difftime(endTime, startTime));
 	printf("*********************************************************************\n");
