@@ -40,23 +40,26 @@ __global__ void computeMath(double *matrix, double *result) {
 
 	// Grab the two indices dependent on the block/thread structure
 	int i = blockIdx.x;
-	int k = blockIdx.y * blockDim.x + threadIdx.x;
-	int register j = 0;
+	int j = blockIdx.y * blockDim.x + threadIdx.x;
+	int register k = 0;
 
 	// Declare pointers to the two arguments of the addition and the result pointer
-	double register *result_ptr;
+	double *result_ptr;
 	double register *second_ptr;
-	double register first_val;
+	double register *first_ptr;
 	
+	double register partialSum = 0.0;
+
 	// Grab the initial values of the pointers and first val
-	first_val = *(matrix + k * MATRIX_DIM + i);
+	first_ptr = matrix + k * MATRIX_DIM + i;
 	second_ptr = matrix + k * MATRIX_DIM + j;
 	result_ptr = result + i * MATRIX_DIM + j;
 
 	// Row traverse an entire row of two matrices
-	for (; j < MATRIX_DIM; j++, result_ptr++, second_ptr++) {
-		*result_ptr += first_val * *second_ptr;
+	for (; k < MATRIX_DIM; k++, first_ptr += MATRIX_DIM, second_ptr += MATRIX_DIM) {
+		partialSum += *first_ptr * *second_ptr;
 	}
+	*result_ptr = partialSum;
 
 }
 
